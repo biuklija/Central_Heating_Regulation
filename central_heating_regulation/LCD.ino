@@ -1,0 +1,56 @@
+void goOne(){ // first line
+	Serial.write(0xFE);   
+	Serial.write(128);    
+}
+void goTwo(){  //puts the cursor at line 2 char 0.
+	Serial.write(0xFE);   
+	Serial.write(192);    
+}
+void goThree(){  //puts the cursor at line 3 char 0.
+	Serial.write(0xFE);   
+	Serial.write(148);    
+}
+void goFour(){  //puts the cursor at line 4 char 0.
+	Serial.write(0xFE);   
+	Serial.write(212);    
+}
+void goTo(int position) {
+	if (position<20){ Serial.write(0xFE);   
+		Serial.write((position+128));    
+	}else if (position<40){Serial.write(0xFE);   
+		Serial.write((position+128+64-20));     
+	}else if (position<60){Serial.write(0xFE);   
+		Serial.write((position+128+20-40));    
+	}else if (position<80){Serial.write(0xFE);   
+		Serial.write((position+128+84-60));                  
+	} else { goTo(0); }
+}
+void clearLCD(){
+	Serial.write(0xFE);   
+	Serial.write(0x01);   //clear command.
+}
+
+void writecharLCD() {
+	unsigned short charArray[][8] = {
+		0x0,0x8,0x15,0x2,0x0,0x1f,0x0,0x0,// 0 regulation
+		0x8,0x8,0x8,0x8,0x8,0x8,0x8,0x8,// box line
+		0x1c,0x14,0x17,0x11,0x17,0x14,0x1c,0x0, //2 mixing valve
+		0xd,0x13,0x17,0x10,0x1,0x1d,0x19,0x16,//3 left-right arrows
+		0x2,0x6,0xf,0x1f,0xf,0x6,0x2,0x0,//4 left arrow
+		0x0,0x1b,0xE,0x4,0xE,0x1B,0x0,0x0,// 5 cross
+		0x0,0x1,0x3,0x16,0x1c,0x8,0x0,0x0,// 6 check
+		0x8,0xc,0x1e,0x1f,0x1e,0xc,0x8,0x0,// 7 right arrow
+		0x0,0x8,0x15,0x2,0x0,0x1f,0x0,0x0 }; // 8 regulation
+	for (int j = 0; j < 8; j++) {
+		Serial.write(254);
+		Serial.write(64+j*8);
+		for (int i = 0; i < 8; i++) {
+			Serial.write(charArray[j][i]);
+		}
+	delay(200);
+	}
+	delay(200);
+}
+
+
+
